@@ -65,13 +65,13 @@ PATH=/usr/local/cuda-9.0/bin:$PATH
 LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
 ```
 
-![1527842285256](D:\Projects\DevNodeBuilder.posix\CUDA_AND_SYMBOLIC_LINK.png)
+![CUDA_AND_SYMBOLIC_LINK](https://github.com/TagineerDai/DevNodeBuilder.posix/blob/master/CUDA_AND_SYMBOLIC_LINK.png?raw=true)
 
 #### cuDNN Installation
 
 We should Downgrade libcudnn7 from 7.0.5.15-1+cuda9.1 to 7.0.5.15-1+cuda9.0.
 
-Install cudnn-7.0.5 manually according to [cuDNN Installation Guide](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/).
+Install manually according to [cuDNN Installation Guide](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/).
 
 Download cuDNN-7.0.5 for CUDA9.0 here: [Download cuDNN v7.0.5 (Dec 5, 2017), for CUDA 9.0](https://developer.nvidia.com/rdp/cudnn-archive#a-collapse705-9) 
 
@@ -79,34 +79,101 @@ Download cuDNN-7.0.5 for CUDA9.0 here: [Download cuDNN v7.0.5 (Dec 5, 2017), for
 sudo dpkg -i libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb
 sudo dpkg -i libcudnn7-dev_7.0.5.15-1+cuda9.0_amd64.deb
 sudo dpkg -i libcudnn7-doc_7.0.5.15-1+cuda9.0_amd64.deb
-# using /usr/include/x86_64-linux-gnu/cudnn_v7.h to provide /usr/include/cudnn.h (libcudnn) in auto mode
+# hint: using /usr/include/x86_64-linux-gnu/cudnn_v7.h to provide /usr/include/cudnn.h (libcudnn) in auto mode
 ```
 
-### Basic installer
+### Basic Packages and IDEs
 
-```
-sudo apt-get install python3-pip python3-dev -y
+#### Packages
+
+```sh
+sudo apt-get install python-numpy python-scipy
+sudo apt-get install python3-pip python3-dev
+sudo apt-get install eog
+sudo pip3 install jupyter pandas graphviz opencv-python
 ```
 
-### Tensorflow
+#### Terminal
+
+```sh
+sudo apt-get install zsh
+sudo wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
+sudo chsh -s /usr/local/bin/zsh
+vim ~/.bashrc
+```
+
+Add lines at the end of `~/.bashrc`
+
+```sh
+PATH=/usr/local/cuda-9.0/bin:$PATH
+LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
+
+tmux_init()
+{
+    tmux new-session -s "States" -d
+    tmux new-window -n "GPU" "watch -n 1 nvidia-smi"
+    tmux split-window -v
+    tmux new-window -n "Processes" "htop"
+    tmux new-session -s "Editor" -d
+    tmux new-window -n "Page1" "cd ~/Projects"
+    tmux split-window -h
+    tmux split-window -v
+}
+
+if which tmux 2>&1 >/dev/null; then
+    test -z "$TMUX" && (tmux attach || (tmux_init && tmux attach))
+fi
+```
+
+#### Editor
+
+```sh
+sudo apt-get install build-essential cmake ycmd
+sudo pip3 install jedi
+cd ~
+touch .vimrc
+mkdir ~/.vim && mkdir ~/.vim/bundle && mkdir ~/Projects
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+git clone https://github.com/TagineerDai/DevNodeBuilder.posix.git ~/Projects/DevNodeBuilder.posix
+cp ~/Projects/DevNodeBuilder.posix/.vimrc ~/.vimrc
+```
+
+Then run `:PluginInstall` in the restarted vim.
+
+```sh
+cd ~/.vim/bundle/YouCompleteMe
+python3 ./install.py --all
+```
+
+Feel free to change the `Plugin` part and pick your favorites from [Vim Awesome](https://vimawesome.com/). Error at the end of installing `YouCompleteMe` is caused by C# incompatible and could be omitted. 
+
+### Frameworks
+
+#### Tensorflow
 
 ```shell
 sudo pip3 install --upgrade tensorflow-gpu
 ```
 
-### PyTorch
+#### PyTorch
 
 ```
 sudo pip3 install --upgrade torch torchvision
 ```
 
-### Keras
+#### Keras
 
 ```shell
 sudo pip3 install keras
 ```
 
-### Caffe
+#### MXNet
+
+```sh
+sudo pip install mxnet-cu90 --pre
+```
+
+#### Caffe
 
 ```sh
 # Install Pre-requisites
@@ -114,7 +181,6 @@ sudo apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev 
 sudo apt-get install --no-install-recommends libboost-all-dev
 sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev
 sudo apt-get install libgflags-dev libgoogle-glog-dev liblmdb-dev
-sudo apt-get install python-numpy python-scipy
 # Install & Make
 git clone https://github.com/TagineerDai/caffe.git
 cd caffe
@@ -128,12 +194,5 @@ sudo make pycaffe -j6
 sudo make runtest 
 ```
 
-![1527848709287](D:\Projects\DevNodeBuilder.posix\PASSED_RUNTEST_CAFFE.png)
-
-### MXNet
-
-```sh
-sudo pip install mxnet-cu90 --pre
-sudo pip install graphviz
-```
+![PASSED_RUNTEST_CAFFE](https://raw.githubusercontent.com/TagineerDai/DevNodeBuilder.posix/master/PASSED_RUNTEST_CAFFE.png)
 
