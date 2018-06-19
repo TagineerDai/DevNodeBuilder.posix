@@ -87,9 +87,9 @@ sudo dpkg -i libcudnn7-doc_7.0.5.15-1+cuda9.0_amd64.deb
 #### Packages
 
 ```sh
-sudo apt-get install python-numpy python-scipy
-sudo apt-get install python3-pip python3-dev
-sudo apt-get install eog
+sudo apt-get install python-numpy python-scipy -y
+sudo apt-get install python3-pip python3-dev python3-matplotlib -y
+sudo apt-get install eog -y
 sudo pip3 install jupyter pandas graphviz opencv-python
 ```
 
