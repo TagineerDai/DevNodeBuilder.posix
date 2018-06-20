@@ -1,5 +1,13 @@
 # DevNodeBuilder.posix
 
+### All-in-one script TBA
+
+```sh
+git clone https://github.com/TagineerDai/DevNodeBuilder.posix
+cd DevNodeBuilder.posix
+sudo bash run.sh
+```
+
 ### CUDA & cuDNN
 
 #### Current version of CUDA and cuDNN
@@ -47,7 +55,7 @@ mv cuda-repo-ubuntu1604-9-0-local-cublas-performance-update-2_1.0-1_amd64-deb cu
 sudo dpkg -i cuda9.0.patch2.deb
 # Installation
 sudo apt-get update
-sudo apt-get install cuda-9.0 -Y
+sudo apt-get install cuda-9.0 -y
 # View the installed package
 cat /var/lib/apt/lists/*cuda*Packages | grep "Package:"
 # Test cuda
@@ -76,6 +84,9 @@ Install manually according to [cuDNN Installation Guide](https://docs.nvidia.com
 Download cuDNN-7.0.5 for CUDA9.0 here: [Download cuDNN v7.0.5 (Dec 5, 2017), for CUDA 9.0](https://developer.nvidia.com/rdp/cudnn-archive#a-collapse705-9) 
 
 ```sh
+mkdir ~/Setup && cd Setup
+git clone https://github.com/TagineerDai/libcudnn7.0.5-cuda9.0-ubuntu16.04.git
+cd libcudnn7.0.5-cuda9.0-ubuntu16.04
 sudo dpkg -i libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb
 sudo dpkg -i libcudnn7-dev_7.0.5.15-1+cuda9.0_amd64.deb
 sudo dpkg -i libcudnn7-doc_7.0.5.15-1+cuda9.0_amd64.deb
@@ -87,16 +98,18 @@ sudo dpkg -i libcudnn7-doc_7.0.5.15-1+cuda9.0_amd64.deb
 #### Packages
 
 ```sh
-sudo apt-get install python-numpy python-scipy -y
+sudo apt-get install python3-numpy python3-scipy -y
 sudo apt-get install python3-pip python3-dev python3-matplotlib -y
 sudo apt-get install eog -y
-sudo pip3 install jupyter pandas graphviz opencv-python
+sudo pip3 install jupyter pandas graphviz opencv-python jedi
+# Please do NOT upgrade pip3 to version 10... To reinstall as follows.
+sudo python3 -m pip uninstall pip && sudo apt install python3-pip --reinstall
 ```
 
 #### Terminal
 
 ```sh
-sudo apt-get install zsh
+sudo apt-get install zsh -y
 sudo wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
 sudo chsh -s /usr/local/bin/zsh
 vim ~/.bashrc
@@ -128,8 +141,7 @@ fi
 #### Editor
 
 ```sh
-sudo apt-get install build-essential cmake ycmd
-sudo pip3 install jedi
+sudo apt-get install build-essential cmake ycmd -y
 cd ~
 touch .vimrc
 mkdir ~/.vim && mkdir ~/.vim/bundle && mkdir ~/Projects
@@ -149,7 +161,7 @@ Feel free to change the `Plugin` part and pick your favorites from [Vim Awesome]
 
 ### Frameworks
 
-#### Tensorflow
+### TensorFlow
 
 ```shell
 sudo pip3 install --upgrade tensorflow-gpu
@@ -177,15 +189,16 @@ sudo pip install mxnet-cu90 --pre
 
 ```sh
 # Install Pre-requisites
-sudo apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler
-sudo apt-get install --no-install-recommends libboost-all-dev
-sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev
-sudo apt-get install libgflags-dev libgoogle-glog-dev liblmdb-dev
+sudo apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler -y
+sudo apt-get install --no-install-recommends libboost-all-dev -y
+sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev -y
+sudo apt-get install libgflags-dev libgoogle-glog-dev liblmdb-dev -y
 # Install & Make
+cd ~/Setup
 git clone https://github.com/TagineerDai/caffe.git
 cd caffe
-cp Makefile.config.example Makefile.config
-vim Makefile.config
+# cp Makefile.config.example Makefile.config
+# vim Makefile.config
 # 6 is number of core, got by `echo $(($(nproc) + 1))`
 sudo make all -j6
 sudo make test -j6
